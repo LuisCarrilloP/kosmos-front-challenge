@@ -16,9 +16,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  border-radius: 10%;
   border: none;
-  font-size: 8px;
+  font-size: 18px;
+  padding: 20px;
+  margin: 10px auto;
+}
+
+#parent {
+  overflow: auto;
+  margin: 0 auto
+}
+
+.draggable {
+  transform: translate(0px 0px)!important;
 }

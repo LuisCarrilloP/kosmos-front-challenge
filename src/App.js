@@ -1,9 +1,12 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Moveable from "react-moveable";
+import './styles.css'
 
 const App = () => {
   const [moveableComponents, setMoveableComponents] = useState([]);
   const [selected, setSelected] = useState(null);
+
+  //*** const containerRef = useRef(null)
 
   const addMoveable = () => {
     // Create a new moveable component and add it to the array
@@ -17,6 +20,7 @@ const App = () => {
         left: 0,
         width: 100,
         height: 100,
+        fit: "cover",
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         updateEnd: true
       },
@@ -51,14 +55,31 @@ const App = () => {
       const initialWidth = e.width;
 
       // Set up the onResize event handler to update the left value based on the change in width
+      // eslint-disable-next-line
+      const onResizeHandler = (width) => {
+        let newLeft = initialLeft - (initialWidth - width)
+        return newLeft
+      }
     }
-  };
+
+    if (handlePosY === -1) {
+      console.log("height", moveableComponents, e);
+      const initialTop = e.top;
+      const initialHeight = e.height;
+      // eslint-disable-next-line
+      const onResizeHandler = (height) => {
+        let newTop = initialTop - (initialHeight - height)
+        return newTop
+      }
+    };
+  }
 
   return (
     <main style={{ height : "100vh", width: "100vw" }}>
-      <button onClick={addMoveable}>Add Moveable1</button>
+      <button className="button" onClick={addMoveable}>Add Moveable1</button>
       <div
         id="parent"
+        //*** ref={containerRef}
         style={{
           position: "relative",
           background: "black",
@@ -68,6 +89,7 @@ const App = () => {
       >
         {moveableComponents.map((item, index) => (
           <Component
+            //*** containerRef={containerRef}
             {...item}
             key={index}
             updateMoveable={updateMoveable}
@@ -80,6 +102,7 @@ const App = () => {
     </main>
   );
 };
+
 
 export default App;
 
@@ -95,6 +118,7 @@ const Component = ({
   setSelected,
   isSelected = false,
   updateEnd,
+  //** */ containerRef
 }) => {
   const ref = useRef();
 
@@ -203,6 +227,7 @@ const Component = ({
 
       <Moveable
         target={isSelected && ref.current}
+        //** */ bounds={{ left: 0, top: 0, right: containerRef.current.offsetWidth, bottom: containerRef.current.offsetHeight }}
         resizable
         draggable
         onDrag={(e) => {
